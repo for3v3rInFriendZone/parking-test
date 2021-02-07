@@ -32,7 +32,43 @@ public class ParkingKartaDAO {
         return hanlder.getParkingKarte();
     }
 
+    public List<ParkingKarte> getAllTrajanjeFrom(Integer from) {
+        String sql = "SELECT pk.id, pk.registracija, pk.pocetakParkinga, pk.trajanjeUMinutima, pk.osobaSaInvaliditetom, z.naziv " +
+                "FROM parkingKarte pk " +
+                "JOIN zone z ON pk.zonaId = z.id " +
+                "WHERE pk.trajanjeUMinutima >= ?";
 
+        ParkingKartaRowCallBackHanlder hanlder = new ParkingKartaRowCallBackHanlder();
+        jdbcTemplate.query(sql, hanlder, from);
+
+        return hanlder.getParkingKarte();
+    }
+
+    public List<ParkingKarte> getAllTrajanjeTo(Integer to) {
+        String sql = "SELECT pk.id, pk.registracija, pk.pocetakParkinga, pk.trajanjeUMinutima, pk.osobaSaInvaliditetom, z.naziv " +
+                "FROM parkingKarte pk " +
+                "JOIN zone z ON pk.zonaId = z.id " +
+                "WHERE pk.trajanjeUMinutima <= ?";
+
+        ParkingKartaRowCallBackHanlder hanlder = new ParkingKartaRowCallBackHanlder();
+        jdbcTemplate.query(sql, hanlder, to);
+
+        return hanlder.getParkingKarte();
+    }
+
+    public List<ParkingKarte> getAllTrajanjeBetween(Integer from, Integer to) {
+        String sql = "SELECT pk.id, pk.registracija, pk.pocetakParkinga, pk.trajanjeUMinutima, pk.osobaSaInvaliditetom, z.naziv " +
+                "FROM parkingKarte pk " +
+                "JOIN zone z ON pk.zonaId = z.id " +
+                "WHERE pk.trajanjeUMinutima BETWEEN ? AND ?";
+
+        ParkingKartaRowCallBackHanlder hanlder = new ParkingKartaRowCallBackHanlder();
+        jdbcTemplate.query(sql, hanlder, from, to);
+
+        return hanlder.getParkingKarte();
+    }
+
+    // Ovo je privatna klasa u kojoj se zapravo mapiraju podaci koji se dobiju iz baze, nakon sto se izvrsi select upit na objekat klase ParkingKarte
     private static class ParkingKartaRowCallBackHanlder implements RowCallbackHandler {
         private Map<Long, ParkingKarte> parkingKarte = new LinkedHashMap<>();
 

@@ -5,11 +5,13 @@ import com.example.test.model.OsobaSaInvaliditetom;
 import com.example.test.model.ParkingKarte;
 import com.example.test.model.Zone;
 import com.example.test.repository.ParkingKartaDAO;
+import com.example.test.service.ParkingKarteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
@@ -25,9 +27,9 @@ public class ParkingKarteController {
     private int ukupanBrojCrvenihKarata = 0;
     private final List<Zone> zone = generateZones();
     private List<ParkingKarte> parkingKarte = getParkingKarte();
-//
-//    @Autowired
-//    private ParkingKarteService parkingKarteService;
+
+    @Autowired
+    private ParkingKarteService parkingKarteService;
 
     @Autowired
     private ParkingKartaDAO parkingKartaDAO;
@@ -103,29 +105,30 @@ public class ParkingKarteController {
         return "zadatak3";
     }
 
-    //
-//    @GetMapping("/ParkingKarte/Zadatak5")
-//    public String getParkingKarteSearch(Model model, @RequestParam(required = false) Integer from, @RequestParam(required = false) Integer to) {
-//        List<ParkingKarte> parkingKarte = this.parkingKarteService.getAllTrajanjeBetween(from, to);
-//        model.addAttribute("parkingKarte", parkingKarte);
-//
-//        for (ParkingKarte karta : parkingKarte) {
-//            System.out.println(karta);
-//        }
-//
-//        return "zadatak5";
-//    }
-//
-//    @GetMapping("/zadatak6.html")
-//    public String getValidationView() {
-//        return "zadatak6";
-//    }
-//
-//    @GetMapping("/zadatak7.html")
-//    public String getZoneView() {
-//        return "zadatak7";
-//    }
-//
+    @GetMapping("/ParkingKarte/Zadatak5")
+    public String getParkingKarteSearch(Model model, @RequestParam(required = false) Integer from, @RequestParam(required = false) Integer to) {
+        List<ParkingKarte> parkingKarte = this.parkingKarteService.getAllTrajanjeBetween(from, to);
+
+        // Ispis svih filtriranih rezultata u konzoli
+        for (ParkingKarte karta : parkingKarte) {
+            System.out.println(karta);
+        }
+
+        model.addAttribute("parkingKarte", parkingKarte);
+
+        return "zadatak5";
+    }
+
+    @GetMapping("/zadatak6.html")
+    public String getValidationView() {
+        return "zadatak6";
+    }
+
+    @GetMapping("/zadatak7.html")
+    public String getZoneView() {
+        return "zadatak7";
+    }
+
     private static List<Zone> generateZones() {
         final List<Zone> zones = new ArrayList<>();
         Zone zone1 = new Zone();
