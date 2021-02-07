@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Parking karte</title>
+</head>
+<body>
+<table>
+    <tr>
+        <th>Registarska oznaka vozila</th>
+        <th>Početak parkinga</th>
+        <th>Trajanje u minutima</th>
+        <th>Osoba sa invaliditetom</th>
+        <th>Zona</th>
+    </tr>
+    <tr th:each="karta : ${parkingKarte}">
+        <td th:text="${karta.registracija}"></td>
+        <td th:text="${karta.pocetakParkinga}"></td>
+        <td th:text="${karta.trajanjeUMinutima}"></td>
+        <td th:text="${karta.osobaSaInvaliditetom}"></td>
+        <td th:text="${karta.zone.naziv}"></td>
+    </tr>
+</table>
+<h2> Ukupna zarada: <span style="color: red;" th:text="${zarada}"> </span></h2>
+
+<p><a href="/Parking/zadatak2.html">Dodaj novu Parking kartu</a></p>
+</body>
+</html>

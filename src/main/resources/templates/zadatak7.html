@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:form="http://form"
+      xmlns:field="http://field">
+<head>
+    <meta charset="UTF-8">
+    <title>Zone</title>
+</head>
+<body>
+<form id="zoneForm">
+    <table>
+        <tr>
+            <td>Naziv</td>
+            <td><input type="text" id="naziv"/></td>
+        </tr>
+        <tr>
+            <td>Cena za sat parkiranja</td>
+            <td><input type="text"id="cenaZaSat" /></td>
+        </tr>
+        <tr>
+            <td>Dozvoljeno vreme parkinga u satima</td>
+            <td><input type="text" id="dozvoljenoVremeParkingaUSatima"/></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="submit" id="submitZone" value="Dodaj zonu"/></td>
+        </tr>
+    </table>
+</form>
+<hr/>
+<h1>Pregled zona</h1>
+<table id="podaci">
+    <tr>
+        <th>Naziv</th>
+        <th>Cena za sat parkiranja</th>
+        <th>Cena sa PDV-om</th>
+        <th>Dozvoljeno vreme parkinga u satima</th>
+    </tr>
+</table>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript" th:src="@{/js/zadatak7.js}"></script>
+</body>
+</html>

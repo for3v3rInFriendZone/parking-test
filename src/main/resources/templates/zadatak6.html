@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Parking karte</title>
+</head>
+<body>
+<form id="kartaForm">
+    <table>
+        <tr>
+            <td>Registarska oznaka vozila</td>
+            <td><input type="text" id="registracija"/></td>
+        </tr>
+        <tr>
+            <td>Početak parkinga</td>
+            <td><input type="text" id="pocetakParkinga"/></td>
+        </tr>
+        <tr>
+            <td>Trajanje u minutima</td>
+            <td><input type="text" id="trajanjeUMinutima"/></td>
+        </tr>
+        <tr>
+            <td>Osoba sa invaliditetom</td>
+            <td>
+                <input type="radio" name="invaliditet" checked /> DA
+                <input type="radio" name="invaliditet"/> NE
+            </td>
+        </tr>
+        <tr>
+            <td>Zona</td>
+            <td>
+                <select id="zona">
+                    <option>bela</option>
+                    <option>plava</option>
+                    <option>crvena</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="submit" value="Dodaj"/></td>
+        </tr>
+    </table>
+</form>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript" th:src="@{/js/zadatak6.js}"></script>
+</body>
+</html>
+
+
+
