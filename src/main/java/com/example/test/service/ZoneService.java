@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ZoneService {
 
-//    List<Zone> getAll();
-//
-//    void create(Zone zone);
+    List<Zone> getAll();
+
+    void create(Zone zone);
 }

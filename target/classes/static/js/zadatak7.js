@@ -33,6 +33,8 @@ function getData() {
         url: "http://localhost:8080/Parking/zone",
         success: function (result) {
             $.each(result, function (i, item) {
+                console.log("Cena " + item.naziv + " zone sa PDV-om iznosi: " + calculatePDV(item));
+
                 var $tr = $('<tr>').append(
                     $('<td>').text(item.naziv),
                     $('<td>').text(item.cenaZaSat),
@@ -41,10 +43,16 @@ function getData() {
                 );
 
                 $("#podaci").append($tr);
+
+
             });
         },
         error: function () {
             alert("Neka greska se desila prilikom preuzimanja Zona.");
         }
     });
+}
+
+function calculatePDV(item) {
+    return item.cenaZaSat + item.cenaZaSat * 0.18;
 }

@@ -11,16 +11,16 @@ import java.util.List;
 @RequestMapping("/zone")
 public class ZoneController {
 
-//    @Autowired
-//    private ZoneService zoneService;
+    @Autowired
+    private ZoneService zoneService;
 
-//    @GetMapping
-//    public List<Zone> getAll() {
-//        return zoneService.getAll();
-//    }
-//
-//    @PostMapping
-//    public void create(@RequestBody Zone zone) {
-//        zoneService.create(zone);
-//    }
+    @GetMapping
+    public List<Zone> getAll() {
+        return zoneService.getAll();
+    }
+
+    @PostMapping
+    public void create(@RequestBody Zone zone) {
+        zoneService.create(zone);
+    }
 }
