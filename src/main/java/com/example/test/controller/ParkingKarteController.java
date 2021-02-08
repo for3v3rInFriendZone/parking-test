@@ -80,14 +80,12 @@ public class ParkingKarteController {
     public String showParkingKarte(Model model, HttpServletRequest request) {
         List<ParkingKarte> parkingKarteKorisnika = getParkingKarteFromSession(request);
 
-        List<ParkingKarte> asd = parkingKartaDAO.findAll();
-
         // Ispisati sesiju korisnika i njegove Parking karte u konzolu
         for (ParkingKarte pk : parkingKarteKorisnika) {
             System.out.println("ISPIS IZ SESIJE: " + pk);
         }
 
-        model.addAttribute("parkingKarte", asd);
+        model.addAttribute("parkingKarte", parkingKarteKorisnika);
 
         Double zarada = calculateZarada();
         model.addAttribute("zarada", zarada);

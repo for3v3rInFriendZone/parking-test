@@ -21,13 +21,14 @@ $(document).ready(function () {
             contentType: "application/json",
             dataType: "json",
             success: function () {
-
+                alert("Nova zona uspesno dodata");
             }
         });
     });
 });
 
 function getData() {
+    // Koriscenje .ajax funkcije da se povuku sve zone sa servera
     $.ajax({
         type: "GET",
         url: "http://localhost:8080/Parking/zone",
@@ -43,8 +44,6 @@ function getData() {
                 );
 
                 $("#podaci").append($tr);
-
-
             });
         },
         error: function () {
@@ -53,6 +52,7 @@ function getData() {
     });
 }
 
+// Racunanje PDV-a cena po satu
 function calculatePDV(item) {
     return item.cenaZaSat + item.cenaZaSat * 0.18;
 }
