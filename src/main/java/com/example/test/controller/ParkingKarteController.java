@@ -35,9 +35,7 @@ public class ParkingKarteController {
     private ParkingKartaDAO parkingKartaDAO;
 
     @GetMapping("/zadatak2.html")
-    public String getParkingKartaView(Model model) {
-        model.addAttribute("parkingKarta", new ParkingKarteRequest());
-
+    public String getParkingKartaView() {
         return "zadatak2";
     }
 
