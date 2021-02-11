@@ -1,39 +1,38 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Parking karte</title>
 </head>
 <body>
-<form action="#" th:action="@{/novaKarta}" th:object="${parkingKarta}" method="post">
+<form action="/Parking/novaKarta" method="post">
     <table>
         <tr>
             <td>Registarska oznaka vozila</td>
-            <td><input type="text" th:field="*{registracija}" id="registracija"/></td>
+            <td><input type="text" name="registracija" id="registracija"/></td>
         </tr>
         <tr>
             <td>Početak parkinga</td>
-            <td><input type="text" th:field="*{pocetakParkinga}" id="pocetakParkinga"/></td>
+            <td><input type="text" name="pocetakParkinga" id="pocetakParkinga"/></td>
         </tr>
         <tr>
             <td>Trajanje u minutima</td>
-            <td><input type="text" th:field="*{trajanjeUMinutima}" id="trajanjeUMinutima"/></td>
+            <td><input type="text" name="trajanjeUMinutima" id="trajanjeUMinutima"/></td>
         </tr>
         <tr>
             <td>Osoba sa invaliditetom</td>
             <td>
-                <input type="radio" name="osobaSaInvaliditetom" th:value="'DA'" th:field="*{osobaSaInvaliditetom}"/> DA
-                <input type="radio" name="osobaSaInvaliditetom" th:value="'NE'" th:field="*{osobaSaInvaliditetom}"/> NE
+                <input type="radio" value="DA" name="osobaSaInvaliditetom"/> DA
+                <input type="radio" value="NE" name="osobaSaInvaliditetom"/> NE
             </td>
         </tr>
         <tr>
             <td>Zona</td>
             <td>
-                <select th:field="*{zona}">
-                    <option th:value="'bela'" th:text="Bela"></option>
-                    <option th:value="'plava'" th:text="Plava"></option>
-                    <option th:value="'crvena'" th:text="Crvena"></option>
+                <select name="zona">
+                    <option value="bela"> Bela</option>
+                    <option value="plava"> Plava</option>
+                    <option value="crvena"> Crvena</option>
                 </select>
             </td>
         </tr>

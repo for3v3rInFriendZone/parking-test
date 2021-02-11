@@ -42,23 +42,29 @@ public class ParkingKarteController {
     }
 
     @PostMapping("/novaKarta")
-    public String createParkingKarta(ParkingKarteRequest parkingKarteRequest, HttpServletRequest request) {
+    public String createParkingKarta(
+            @RequestParam String registracija,
+            @RequestParam String pocetakParkinga,
+            @RequestParam String trajanjeUMinutima,
+            @RequestParam String osobaSaInvaliditetom,
+            @RequestParam String zona,
+            HttpServletRequest request) {
         List<ParkingKarte> parkingKarteKorisnika = getParkingKarteFromSession(request);
 
         // Racunanje koliko ima crvenih parking karata
-        if (parkingKarteRequest.getZona().equals("crvena")) {
+        if (zona.equals("crvena")) {
             ukupanBrojCrvenihKarata++;
         }
 
-        Zone zona = getZonaByName(parkingKarteRequest.getZona());
+        Zone zonaDb = getZonaByName(zona);
 
         final ParkingKarte parkingKarta = new ParkingKarte();
-        parkingKarta.setPocetakParkinga(parkingKarteRequest.getPocetakParkinga());
-        parkingKarta.setRegistracija(parkingKarteRequest.getRegistracija());
-        parkingKarta.setTrajanjeUMinutima(parkingKarteRequest.getTrajanjeUMinutima());
-        parkingKarta.setOsobaSaInvaliditetom(OsobaSaInvaliditetom.valueOf(parkingKarteRequest.getOsobaSaInvaliditetom()));
+        parkingKarta.setPocetakParkinga(pocetakParkinga);
+        parkingKarta.setRegistracija(registracija);
+        parkingKarta.setTrajanjeUMinutima(Integer.parseInt(trajanjeUMinutima));
+        parkingKarta.setOsobaSaInvaliditetom(OsobaSaInvaliditetom.valueOf(osobaSaInvaliditetom));
         parkingKarta.setId(++generatedId);
-        parkingKarta.setZone(zona);
+        parkingKarta.setZone(zonaDb);
 
         //dodavanje nove Parking karte u List-u
         parkingKarte.add(parkingKarta);
