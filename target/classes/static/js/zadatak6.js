@@ -32,5 +32,7 @@ $(document).ready(function () {
             alert("Trajanje u minutima u crvenoj zoni mora biti manje od 120 minuta!");
             return;
         }
+
+        alert("Uspesno popunjena forma");
     });
 });

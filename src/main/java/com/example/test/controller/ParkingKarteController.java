@@ -1,10 +1,8 @@
 package com.example.test.controller;
 
-import com.example.test.dto.ParkingKarteRequest;
 import com.example.test.model.OsobaSaInvaliditetom;
 import com.example.test.model.ParkingKarte;
 import com.example.test.model.Zone;
-import com.example.test.repository.ParkingKartaDAO;
 import com.example.test.service.ParkingKarteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,9 +29,6 @@ public class ParkingKarteController {
     @Autowired
     private ParkingKarteService parkingKarteService;
 
-    @Autowired
-    private ParkingKartaDAO parkingKartaDAO;
-
     @GetMapping("/zadatak2.html")
     public String getParkingKartaView() {
         return "zadatak2";
@@ -43,23 +38,18 @@ public class ParkingKarteController {
     public String createParkingKarta(
             @RequestParam String registracija,
             @RequestParam String pocetakParkinga,
-            @RequestParam String trajanjeUMinutima,
+            @RequestParam Integer trajanjeUMinutima,
             @RequestParam String osobaSaInvaliditetom,
             @RequestParam String zona,
-            HttpServletRequest request) {
-        List<ParkingKarte> parkingKarteKorisnika = getParkingKarteFromSession(request);
-
-        // Racunanje koliko ima crvenih parking karata
-        if (zona.equals("crvena")) {
-            ukupanBrojCrvenihKarata++;
-        }
+            HttpSession session) {
+        List<ParkingKarte> parkingKarteKorisnika = getParkingKarteFromSession(session);
 
         Zone zonaDb = getZonaByName(zona);
 
         final ParkingKarte parkingKarta = new ParkingKarte();
         parkingKarta.setPocetakParkinga(pocetakParkinga);
         parkingKarta.setRegistracija(registracija);
-        parkingKarta.setTrajanjeUMinutima(Integer.parseInt(trajanjeUMinutima));
+        parkingKarta.setTrajanjeUMinutima(trajanjeUMinutima);
         parkingKarta.setOsobaSaInvaliditetom(OsobaSaInvaliditetom.valueOf(osobaSaInvaliditetom));
         parkingKarta.setId(++generatedId);
         parkingKarta.setZone(zonaDb);
@@ -69,11 +59,16 @@ public class ParkingKarteController {
 
         //Dodavanje u sesiju korisnika novu Parking kartu, ali NJEGOVU SAMO!!!
         parkingKarteKorisnika.add(parkingKarta);
-        request.getSession().setAttribute(PARKING_KARTE_SESSION, parkingKarteKorisnika);
+        session.setAttribute(PARKING_KARTE_SESSION, parkingKarteKorisnika);
 
         //Ispis Parking Karata u konzoli, prikaz podataka iz memorije
         for (ParkingKarte pk : parkingKarte) {
             System.out.println(pk);
+        }
+
+        // Racunanje koliko ima crvenih parking karata
+        if (zona.equals("crvena")) {
+            ukupanBrojCrvenihKarata++;
         }
         System.out.println("Ukupan broj crvenih karata: " + ukupanBrojCrvenihKarata);
 
@@ -81,8 +76,8 @@ public class ParkingKarteController {
     }
 
     @GetMapping("/ParkingKarte/Zadatak3")
-    public String showParkingKarte(Model model, HttpServletRequest request) {
-        List<ParkingKarte> parkingKarteKorisnika = getParkingKarteFromSession(request);
+    public String showParkingKarte(Model model, HttpSession session) {
+        List<ParkingKarte> parkingKarteKorisnika = getParkingKarteFromSession(session);
 
         // Ispisati sesiju korisnika i njegove Parking karte u konzolu
         for (ParkingKarte pk : parkingKarteKorisnika) {
@@ -94,22 +89,15 @@ public class ParkingKarteController {
         Double zarada = calculateZarada();
         model.addAttribute("zarada", zarada);
 
-        //Racunanje broja crvenih parking karata
-        int brojCrvenihParkingKarata = 0;
-        for (ParkingKarte karta : parkingKarte) {
-            if (karta.getZone().getNaziv().equals("crvena")) {
-                brojCrvenihParkingKarata++;
-            }
-            System.out.println(karta);
-            System.out.println("Broj crvenih parking karata: " + brojCrvenihParkingKarata);
-        }
-
         return "zadatak3";
     }
 
     @GetMapping("/ParkingKarte/Zadatak5")
-    public String getParkingKarteSearch(Model model, @RequestParam(required = false) Integer from, @RequestParam(required = false) Integer to) {
-        List<ParkingKarte> parkingKarte = this.parkingKarteService.getAllTrajanjeBetween(from, to);
+    public String getParkingKarteSearch(
+            Model model,
+            @RequestParam(required = false) Integer from,
+            @RequestParam(required = false) Integer to) {
+        List<ParkingKarte> parkingKarte = this.parkingKarteService.getAllTrajanjeFilter(from, to);
 
         // Ispis svih filtriranih rezultata u konzoli
         for (ParkingKarte karta : parkingKarte) {
@@ -168,8 +156,8 @@ public class ParkingKarteController {
         return lista;
     }
 
-    private List<ParkingKarte> getParkingKarteFromSession(HttpServletRequest request) {
-        List<ParkingKarte> parkingKarteKorisnika = (List<ParkingKarte>) request.getSession().getAttribute(PARKING_KARTE_SESSION);
+    private List<ParkingKarte> getParkingKarteFromSession(HttpSession session) {
+        List<ParkingKarte> parkingKarteKorisnika = (List<ParkingKarte>) session.getAttribute(PARKING_KARTE_SESSION);
         if (parkingKarteKorisnika == null) {
             parkingKarteKorisnika = new ArrayList<>();
         }
@@ -179,15 +167,13 @@ public class ParkingKarteController {
 
     private Zone getZonaByName(String nazivZone) {
         // Pronalazenje Zona OBJEKTA!!!!! kom nova Parking karta pripada (strani kljuc u principu)
-        Zone zona = null;
         for (Zone trenutnaZona : this.zone) {
             if (trenutnaZona.getNaziv().equals(nazivZone)) {
-                zona = trenutnaZona;
-                break;
+                return trenutnaZona;
             }
         }
 
-        return zona;
+        return null;
     }
 
     private Double calculateZarada() {

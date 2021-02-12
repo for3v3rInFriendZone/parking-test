@@ -11,9 +11,7 @@ import org.springframework.stereotype.Component;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class ParkingKartaDAO {
@@ -26,10 +24,10 @@ public class ParkingKartaDAO {
                 "FROM parkingKarte pk " +
                 "JOIN zone z ON pk.zonaId = z.id";
 
-        ParkingKartaRowCallBackHanlder hanlder = new ParkingKartaRowCallBackHanlder();
-        jdbcTemplate.query(sql, hanlder);
+        ParkingKartaRowCallBackHandler handler = new ParkingKartaRowCallBackHandler();
+        jdbcTemplate.query(sql, handler);
 
-        return hanlder.getParkingKarte();
+        return handler.getParkingKarte();
     }
 
     public List<ParkingKarte> getAllTrajanjeFrom(Integer from) {
@@ -38,10 +36,10 @@ public class ParkingKartaDAO {
                 "JOIN zone z ON pk.zonaId = z.id " +
                 "WHERE pk.trajanjeUMinutima >= ?";
 
-        ParkingKartaRowCallBackHanlder hanlder = new ParkingKartaRowCallBackHanlder();
-        jdbcTemplate.query(sql, hanlder, from);
+        ParkingKartaRowCallBackHandler handler = new ParkingKartaRowCallBackHandler();
+        jdbcTemplate.query(sql, handler, from);
 
-        return hanlder.getParkingKarte();
+        return handler.getParkingKarte();
     }
 
     public List<ParkingKarte> getAllTrajanjeTo(Integer to) {
@@ -50,7 +48,7 @@ public class ParkingKartaDAO {
                 "JOIN zone z ON pk.zonaId = z.id " +
                 "WHERE pk.trajanjeUMinutima <= ?";
 
-        ParkingKartaRowCallBackHanlder hanlder = new ParkingKartaRowCallBackHanlder();
+        ParkingKartaRowCallBackHandler hanlder = new ParkingKartaRowCallBackHandler();
         jdbcTemplate.query(sql, hanlder, to);
 
         return hanlder.getParkingKarte();
@@ -62,15 +60,15 @@ public class ParkingKartaDAO {
                 "JOIN zone z ON pk.zonaId = z.id " +
                 "WHERE pk.trajanjeUMinutima BETWEEN ? AND ?";
 
-        ParkingKartaRowCallBackHanlder hanlder = new ParkingKartaRowCallBackHanlder();
-        jdbcTemplate.query(sql, hanlder, from, to);
+        ParkingKartaRowCallBackHandler handler = new ParkingKartaRowCallBackHandler();
+        jdbcTemplate.query(sql, handler, from, to);
 
-        return hanlder.getParkingKarte();
+        return handler.getParkingKarte();
     }
 
     // Ovo je privatna klasa u kojoj se zapravo mapiraju podaci koji se dobiju iz baze, nakon sto se izvrsi select upit na objekat klase ParkingKarte
-    private static class ParkingKartaRowCallBackHanlder implements RowCallbackHandler {
-        private Map<Long, ParkingKarte> parkingKarte = new LinkedHashMap<>();
+    private static class ParkingKartaRowCallBackHandler implements RowCallbackHandler {
+        private List<ParkingKarte> parkingKarte = new ArrayList<>();
 
         @Override
         public void processRow(ResultSet resultSet) throws SQLException {
@@ -93,11 +91,11 @@ public class ParkingKartaDAO {
             zona.setNaziv(nazivZone);
             parkingKarta.setZone(zona);
 
-            parkingKarte.put(parkingKarta.getId(), parkingKarta);
+            parkingKarte.add(parkingKarta);
         }
 
         public List<ParkingKarte> getParkingKarte() {
-            return new ArrayList<>(parkingKarte.values());
+            return parkingKarte;
         }
     }
 

@@ -12,23 +12,18 @@ import java.util.List;
 public class ParkingKarteServiceImpl implements ParkingKarteService {
 
     @Autowired
-     private ParkingKartaDAO parkingKarteRepository;
+    private ParkingKartaDAO parkingKartaDAO;
 
     @Override
-    public List<ParkingKarte> getAll() {
-        return this.parkingKarteRepository.findAll();
-    }
-
-    @Override
-    public List<ParkingKarte> getAllTrajanjeBetween(Integer from, Integer to) {
+    public List<ParkingKarte> getAllTrajanjeFilter(Integer from, Integer to) {
         if (from == null && to == null) {
-            return this.parkingKarteRepository.findAll();
+            return this.parkingKartaDAO.findAll();
         } else if (to == null) {
-            return this.parkingKarteRepository.getAllTrajanjeFrom(from);
+            return this.parkingKartaDAO.getAllTrajanjeFrom(from);
         } else if (from == null) {
-            return this.parkingKarteRepository.getAllTrajanjeTo(to);
+            return this.parkingKartaDAO.getAllTrajanjeTo(to);
         } else {
-            return this.parkingKarteRepository.getAllTrajanjeBetween(from, to);
+            return this.parkingKartaDAO.getAllTrajanjeBetween(from, to);
         }
     }
 }
